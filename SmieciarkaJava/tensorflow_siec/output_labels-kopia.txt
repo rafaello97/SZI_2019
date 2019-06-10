@@ -1,0 +1,4 @@
+aluminium
+papier
+plastik
+szklo

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_smieciarkajava" default="compile.module.smieciarkajava">
+  <dirname property="module.smieciarkajava.basedir" file="${ant.file.module_smieciarkajava}"/>
+  
+  <property name="module.jdk.home.smieciarkajava" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.smieciarkajava" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.smieciarkajava" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.smieciarkajava" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="smieciarkajava.output.dir" value="${module.smieciarkajava.basedir}/out/production/SmieciarkaJava"/>
+  <property name="smieciarkajava.testoutput.dir" value="${module.smieciarkajava.basedir}/out/test/SmieciarkaJava"/>
+  
+  <path id="smieciarkajava.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="smieciarkajava.module.production.classpath">
+    <path refid="${module.jdk.classpath.smieciarkajava}"/>
+  </path>
+  
+  <path id="smieciarkajava.runtime.production.module.classpath">
+    <pathelement location="${smieciarkajava.output.dir}"/>
+  </path>
+  
+  <path id="smieciarkajava.module.classpath">
+    <path refid="${module.jdk.classpath.smieciarkajava}"/>
+    <pathelement location="${smieciarkajava.output.dir}"/>
+  </path>
+  
+  <path id="smieciarkajava.runtime.module.classpath">
+    <pathelement location="${smieciarkajava.testoutput.dir}"/>
+    <pathelement location="${smieciarkajava.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.smieciarkajava">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.smieciarkajava">
+    <patternset refid="excluded.from.module.smieciarkajava"/>
+  </patternset>
+  
+  <path id="smieciarkajava.module.sourcepath">
+    <dirset dir="${module.smieciarkajava.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.smieciarkajava" depends="compile.module.smieciarkajava.production,compile.module.smieciarkajava.tests" description="Compile module SmieciarkaJava"/>
+  
+  <target name="compile.module.smieciarkajava.production" depends="register.custom.compilers" description="Compile module SmieciarkaJava; production classes">
+    <mkdir dir="${smieciarkajava.output.dir}"/>
+    <javac2 destdir="${smieciarkajava.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.smieciarkajava}/javac">
+      <compilerarg line="${compiler.args.smieciarkajava}"/>
+      <bootclasspath refid="smieciarkajava.module.bootclasspath"/>
+      <classpath refid="smieciarkajava.module.production.classpath"/>
+      <src refid="smieciarkajava.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.smieciarkajava"/>
+    </javac2>
+    
+    <copy todir="${smieciarkajava.output.dir}">
+      <fileset dir="${module.smieciarkajava.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.smieciarkajava.tests" depends="register.custom.compilers,compile.module.smieciarkajava.production" description="compile module SmieciarkaJava; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.smieciarkajava" description="cleanup module">
+    <delete dir="${smieciarkajava.output.dir}"/>
+    <delete dir="${smieciarkajava.testoutput.dir}"/>
+  </target>
+</project>
